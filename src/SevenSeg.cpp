@@ -1,7 +1,8 @@
 #include <LedControl.h>
 #include <SevenSeg.h>
-// include main.h for global definitions
 #include <main.h>
+
+// include main.h for global definitions
 
 //initialize the Sevensegment function with the LedControll Library
 LedControl SevenSeg = LedControl(12,10,11,4);
@@ -104,20 +105,7 @@ void printRegister(int dregister, long number, bool leadzero, bool blink, bool a
     }
     if (blink == true)
     {
-        if ((toggle500 == true) && (printregtoggle == true))
-        {   
-            printregtoggle = false;
-            SevenSeg.setDigit(dregister, 5, one, false);
-            SevenSeg.setDigit(dregister, 4, ten, false);
-            SevenSeg.setDigit(dregister, 3, hundred, false);
-            SevenSeg.setDigit(dregister, 2, thousand, false);
-            SevenSeg.setDigit(dregister, 1, tenthousand, false);
-        }
-        else if ((toggle500 == false) && (printregtoggle == false))
-        {
-            printregtoggle = true;
-            SevenSeg.clearDisplay(dregister);
-        }
+        SevenSeg.clearDisplay(dregister);
     }
 }
 
