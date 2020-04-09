@@ -1,3 +1,4 @@
+#include <Arduino.h>
 #include <functions.h>
 #include <main.h>
 
@@ -45,3 +46,4 @@ bool toggle_timer_250(void *)
   }
   return true; // repeat? true
 }
+

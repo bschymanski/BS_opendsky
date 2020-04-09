@@ -32,6 +32,7 @@ const short     programApollo13Audio        = 70;
 
 const short     verbNone                    = 0;
 const short     verbLampTest                = 35;
+const short     verbInputProg               = 37;
 const short     verbDisplayDecimal          = 16;
 const short     verbInputNumber             = 21;
 
@@ -44,6 +45,7 @@ const short     nounDate                    = 37;
 const short     nounLatLongAltitude         = 43;
 const short     nounRangeTgoVelocity        = 68;
 const short     nounSelectAudioclip         = 98;
+const short     nounNotUsed         		= -1;
 
 extern bool toggle;
 
@@ -65,7 +67,15 @@ typedef struct PROGRAM_STRUCT
 }ProgramStruct;
 
 extern ProgramStruct ProgramTable[];
-#define NUM_PROG_TABLE_ENTRIES  (sizeof(ProgramTable)/sizeof(ProgramStruct))
+
+extern short verb_0;
+extern short verb_1;
+
+extern short noun_0;
+extern short noun_1;
+
+extern short prog_0;
+extern short prog_1;
 
 
 #endif

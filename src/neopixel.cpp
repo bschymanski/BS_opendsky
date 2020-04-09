@@ -45,7 +45,7 @@ void setLamp(int color, int lampNumber)
             // Statement(s)
             break;
         case blue:
-            neoPixels.setPixelColor(lampNumber, neoPixels.Color(0,0,100));
+            neoPixels.setPixelColor(lampNumber, neoPixels.Color(0,0,200));
             neoPixels.show();   // show the updated pixel color on the hardware
             // Statement(s)
             break;
