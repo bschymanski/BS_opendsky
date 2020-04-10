@@ -1,7 +1,8 @@
 #include <Arduino.h>
 #include <functions.h>
 #include <main.h>
-
+#include <neopixel.h>
+#include <SevenSeg.h>
 
 // 1sec toogle
 bool toggle_timer(void *)
@@ -47,3 +48,46 @@ bool toggle_timer_250(void *)
   return true; // repeat? true
 }
 
+void keyResetfunction()
+{  // for now the Reset Button resets the mode to Idlemode, clears all relevant variables for a clean startover
+  mode = modeIdle;
+  setLamp(green, lampVerb);
+  setLamp(green, lampNoun);
+  setLamp(green, lampProg);
+  noun = 0;
+  verb = 0;
+  prog = 0;
+  verb_valid = false;
+  noun_valid = false;
+  verb_error = false;
+  setLamp(off, lampOprErr);
+  clearRegister(1);
+  clearRegister(2);
+  clearRegister(3);
+  }
+
+void clearVerbfunction()
+{
+  verb_valid = false;
+  noun_valid = false;
+  verb = 0;
+  noun = 0;
+  verb_0 = -1;
+  verb_1 = -1;
+  noun_0 = -1;
+  noun_1 = -1;
+  printChar(0, 0, ' ');
+  printChar(0, 1, ' ');
+  printChar(0, 4, ' ');
+  printChar(0, 5, ' ');
+}
+
+void clearNounfunction()
+{
+  noun_valid = false;
+  noun = 0;
+  noun_0 = -1;
+  noun_1 = -1;
+  printChar(0, 4, ' ');
+  printChar(0, 5, ' ');
+}

@@ -27,7 +27,7 @@ const short     programNone                 = 0;
 const short     programJFKAudio             = 62;
 const short     programApollo11Audio        = 69;
 const short     programApollo13Audio        = 70;
-
+const short     programNotUsed				= -1;
 // valid Verbs
 
 const short     verbNone                    = 0;
@@ -59,14 +59,7 @@ extern bool toggle500;
 extern bool toggle250;
 
 
-typedef struct PROGRAM_STRUCT
-{
-		short VerbNumber;
-		short NounNumber;
-        short action;
-}ProgramStruct;
 
-extern ProgramStruct ProgramTable[];
 
 extern short verb_0;
 extern short verb_1;
@@ -77,5 +70,39 @@ extern short noun_1;
 extern short prog_0;
 extern short prog_1;
 
+extern short mode;
+extern short verb;
+extern short noun;
+extern short prog;
+extern short action;
+
+// old Mode-, Verb, Noun, Program and Action Values
+extern short old1_mode;
+extern short old1_verb;
+extern short old1_noun;
+extern short old1_prog;
+extern short old1_action;
+
+// before old Mode-, Verb, Noun, Program and Action values
+extern short old2_mode;
+extern short old2_verb;
+extern short old2_noun;
+extern short old2_prog;
+extern short old2_action;
+
+extern bool verb_valid;
+extern bool noun_valid;
+extern bool prog_valid;
+
+extern short temporaryKey;
+extern short pressedKey;
+
+extern short verb_temp;
+extern short noun_temp;
+extern short prog_temp;
+
+extern bool verb_error;
+extern bool noun_error;
+extern bool prog_error;
 
 #endif
