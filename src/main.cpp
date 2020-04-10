@@ -189,7 +189,7 @@ void loop()
       break;
     }
     case modeInputNoun:
-    {
+    { // A Noun is going to be entered (maybe)
       inputNoun();
       break;
     }
