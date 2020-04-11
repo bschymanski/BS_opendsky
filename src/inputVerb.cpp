@@ -143,6 +143,7 @@ void inputVerb()
                 case keyRelease:  // we changed our mind and don't want to input a verb, back to idle mode
                     mode = modeIdle;
                     setLamp(green, lampVerb);
+                    clearVerbfunction();
                     break;
                 // Now we are entering the numbers for the verb!
                 case keyNumber0:  
@@ -239,6 +240,7 @@ void inputVerb()
                         clearRegister(2);
                         clearRegister(3);
                         setLamp(green, lampVerb);
+                        executeAction = true;
                         break;
                     case keyProceed:
                         break;
@@ -251,5 +253,10 @@ void inputVerb()
             }
             pressedKey = temporaryKey;
         }
+    }
+    else if ((verb_valid == true) && (noun_valid == true))
+    { // we have a valid verb and a valid noun, but we want to enter a new verb obviously
+        clearVerbfunction();
+        mode = modeInputVerb;
     }
 }

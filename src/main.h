@@ -21,6 +21,8 @@ const short     modeInputNoun               = 2;
 const short     modeInputProgram            = 3;
 const short     modeInputNumber             = 4;
 const short     modeLampTest                = 5;
+const short     modeExcuteAction            = 6;
+const short     modeExcuteProgram           = 7;
 
 // possible Programs
 const short     programNone                 = 0;

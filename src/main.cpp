@@ -1,23 +1,6 @@
 #include <Arduino.h>
 // Wirelibrary for RTC and IMU
 #include <Wire.h>
-
-
-
-bool toggled = false;
-bool toggled500 = false;
-bool toggled250 = false;
-bool toggledverbblink = false;
-
-
-
-bool blinkverb = true;
-bool blinknoun = true;
-bool imutoggle = true;
-bool printregtoggle = true;
-bool uplink_compact_toggle = true;
-
-
 #include <timer.h>
 auto timer = timer_create_default();
 #include <functions.h>
@@ -28,20 +11,6 @@ auto timer = timer_create_default();
 #include <SevenSeg.h>
 #include <globals.h>
 #include <main.h>
-
-
-
-bool global_state_1sec = true;
-bool global_state_500 = true;
-bool global_state_250 = true;
-bool toggle500 = true;
-bool toggle250 = true;
-bool toggle = true;
-bool printed = true;
-
-
-
-
 #include <inputVerb.h>
 #include <inputNoun.h>
 #include <inputProgram.h>
@@ -169,7 +138,10 @@ void loop()
             mode = modeInputVerb;
             break;
           case keyNoun:
-            mode = modeInputNoun;
+            if (verb_valid == true)
+            {
+              mode = modeInputNoun;
+            }
             break;
           case keyRelease:
             mode = modeIdle;
@@ -218,14 +190,139 @@ void loop()
     {
       break;
     }
+    case modeExcuteAction:
+    {
+      setLamp(white, lampUplinkActy);  // just to indicate we are in Action execution Mode
+      printProg(prog);
+      printVerb(verb);
+      printNoun(noun);
+      // we have a valid Action but we have to figure out which one
+      if ((verb_valid == true) && (noun_valid == true) && (lookupAction == false))
+      {
+        // lets check which action to perform, but as always scan for some keys first
+        temporaryKey = readKeyboard();
+        //
+        if (pressedKey != temporaryKey)
+        {
+          switch(temporaryKey)
+          {
+            case keyVerb:
+              mode = modeInputVerb;
+              break;
+            case keyNoun:
+              if (verb_valid == true)
+              {
+                mode = modeInputNoun;
+              }
+              break;
+            case keyRelease:
+              mode = modeIdle;
+              clearRegister(1);
+              clearRegister(2);
+              clearRegister(3);
+              action = action_none;
+              setLamp(off, lampUplinkActy);
+              break;
+            case keyReset:
+              keyResetfunction();
+              break;  
+          }
+        }
+        pressedKey = temporaryKey;
+        short idx = 0;
+        bool found = false;
+        while ((idx < NUM_PROG_TABLE_ENTRIES) && (found == false))
+        { // lets have a look at the Programtable for a valid noun / verb combination
+            if ((ProgramTable[idx].VerbNumber == verb) && (ProgramTable[idx].NounNumber == noun))
+            {
+                lookupAction = true;
+                found = true;
+                action = ProgramTable[idx].action;
+                printRegister(1, action);
+                printRegister(3, idx);
+            }
+            idx++;
+        }
+        if (found == false)
+        { // Why didn't we find the Action if noun and verb are correct?
+            setLamp(orange, lampProgCond);
+            //clearprogfunction();
+        }
+      }
+      else if ((verb_valid == true) && (noun_valid == true) && (lookupAction == true))
+      { // lets execute the action
+        printProg(prog);
+        printVerb(verb);
+        printNoun(noun);
+        // As always, lets scan some keys first
+        temporaryKey = readKeyboard();
+        //
+        if (pressedKey != temporaryKey)
+        {
+          switch(temporaryKey)
+          {
+            case keyVerb:
+              mode = modeInputVerb;
+              break;
+            case keyNoun:
+              if (verb_valid == true)
+              {
+                mode = modeInputNoun;
+              }
+              break;
+            case keyRelease:
+              mode = modeIdle;
+              clearRegister(1);
+              clearRegister(2);
+              clearRegister(3);
+              action = action_none;
+              lookupAction = false;
+              setLamp(off, lampUplinkActy);
+              setLamp(off, lampTemp);
+              clearVerbfunction();
+              break;
+            case keyReset:
+              keyResetfunction();
+              break;  
+          }
+        }
+        pressedKey = temporaryKey;
+        // now, finally we can really execute the action!
+        switch (action)
+        {
+          case action_displayRealTimeClock:
+          {
+            setLamp(white, lampTemp);
+            break;
+          }
+          case action_none:
+          {
+            clearVerbfunction();
+            break;
+          }
+        }
+      }
+      break;
+    }
     default:
     {
       // there should be no Mode...
-      setLamp(orange, lampProg);
+      setLamp(orange, lampProgCond);
       break;
     }
   }
-
+  // blink the OPR Error Lamp if there is an input Error
+  if ((verb_error == true) || (noun_error == true) || (prog_error == true))
+  {
+    if (toggle == true)
+    {
+      setLamp(white, lampOprErr);
+    }
+    else if (toggle == false)
+    {
+      setLamp(off, lampOprErr);
+    }
+  }
 
   // Serial Print the mode, noun, etc
   if ((toggle250 == true) && (printed == true))
@@ -238,5 +335,4 @@ void loop()
     serialprintmainstates();
     printed = true;
   }
- 
 }

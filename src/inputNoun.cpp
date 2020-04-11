@@ -203,7 +203,7 @@ void inputNoun()
                     clearNounfunction();
                     break;
                 case keyEnter:
-                    mode = modeIdle;
+                    mode = modeExcuteAction;
                     setLamp(green, lampNoun);
                     clearRegister(1);
                     clearRegister(2);

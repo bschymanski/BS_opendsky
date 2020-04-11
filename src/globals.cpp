@@ -39,3 +39,26 @@ short NUM_PROG_TABLE_ENTRIES = (sizeof(ProgramTable)/sizeof(ProgramStruct));
 bool blink = false;
 bool toggledprogblink = false;
 bool blinkprog = false;
+bool toggled = false;
+bool toggled500 = false;
+bool toggled250 = false;
+bool toggledverbblink = false;
+
+bool blinkverb = true;
+bool blinknoun = true;
+bool imutoggle = true;
+bool printregtoggle = true;
+bool uplink_compact_toggle = true;
+
+bool global_state_1sec = true;
+bool global_state_500 = true;
+bool global_state_250 = true;
+bool toggle500 = true;
+bool toggle250 = true;
+bool toggle = true;
+bool printed = true;
+
+bool executeAction = false;
+bool lookupAction = false;
+bool executeProgram = false;
+bool lookupProgram = false;
