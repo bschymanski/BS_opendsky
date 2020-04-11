@@ -14,6 +14,7 @@ auto timer = timer_create_default();
 #include <inputVerb.h>
 #include <inputNoun.h>
 #include <inputProgram.h>
+#include <time_functions.h>
 
 // some toggle definitions for blinking stuff
 
@@ -82,6 +83,7 @@ void setup()
   setLamp(white, lampNoAtt);
   // initialize the Sevensegments
   SevenSegSetup();
+  time_setup();
   Serial.begin(9600);
   // Toggle 
   timer.every(1000, toggle_timer);
@@ -292,7 +294,7 @@ void loop()
         {
           case action_displayRealTimeClock:
           {
-            setLamp(white, lampTemp);
+            actionReadTime();
             break;
           }
           case action_none:
