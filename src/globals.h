@@ -14,5 +14,8 @@ extern ProgramStruct ProgramTable[];
 
 extern short NUM_PROG_TABLE_ENTRIES;
 
+extern bool blink;
+extern bool toggledprogblink;
+extern bool blinkprog;
 // ProgramStruct ProgramTable[];
 #endif

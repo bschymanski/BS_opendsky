@@ -186,6 +186,7 @@ void inputVerb()
     { // we have a valid verb and now lets see what we comes next: Lamptest, Program Input, Verb input?
         if (verb == verbInputProg)
         {
+            clearProgfunction();
             mode = modeInputProgram;
         }
         else if (verb == verbLampTest)
@@ -234,6 +235,9 @@ void inputVerb()
                         break;
                     case keyEnter:
                         mode = modeIdle;
+                        clearRegister(1);
+                        clearRegister(2);
+                        clearRegister(3);
                         setLamp(green, lampVerb);
                         break;
                     case keyProceed:

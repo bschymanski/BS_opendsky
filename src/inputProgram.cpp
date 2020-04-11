@@ -9,6 +9,19 @@
 
 void inputProgram()
 {
+    if ((blinkprog == true) && (prog_valid == true))
+    {
+        if ((toggle == true) && (toggledprogblink == true))
+        {
+            toggledprogblink = false;
+            printNoun(prog, blink=false);
+        }
+        else if ((toggle == false) && (toggledprogblink == false))
+        {
+            toggledprogblink = true;
+            printNoun(prog, blink=true);
+        }
+    }
     if ((prog_0 >= 0) && (prog_1 >= 0) && (verb_valid == true) && (prog_valid != true) && (prog_error !=true))
     { // we might possibly have a valid noun, lets find out
         prog_temp = (prog_0*10)+prog_1;
@@ -39,6 +52,7 @@ void inputProgram()
                 prog_0 = -1;
                 prog_1 = -1;
                 setLamp(blue, lampProg);
+                blinkprog=true;
             }
             idx++;
         }
@@ -145,9 +159,13 @@ void inputProgram()
                     if (prog_error == true)
                     {
                         clearProgfunction();
+                        printChar(0, 4, ' ');
+                        printChar(0, 5, ' ');
                         prog_error = false;
                         setLamp(off, lampOprErr);
                     }
+                    printChar(0, 4, ' ');
+                    printChar(0, 5, ' ');
                     clearProgfunction();
                     break;
                 case keyEnter:
@@ -193,13 +211,17 @@ void inputProgram()
                 case keyMinus:
                     break;
                 case keyClear:
-                    if (noun_error == true)
+                    if (prog_error == true)
                     {
                         clearProgfunction();
+                        printChar(0, 4, ' ');
+                        printChar(0, 5, ' ');
                         prog_error = false;
                         setLamp(off, lampOprErr);
                     }
                     clearProgfunction();
+                    printChar(0, 4, ' ');
+                    printChar(0, 5, ' ');
                     break;
                 case keyEnter:
                     mode = modeIdle;

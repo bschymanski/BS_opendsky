@@ -35,3 +35,7 @@ ProgramStruct ProgramTable[] =
 
 
 short NUM_PROG_TABLE_ENTRIES = (sizeof(ProgramTable)/sizeof(ProgramStruct));
+
+bool blink = false;
+bool toggledprogblink = false;
+bool blinkprog = false;

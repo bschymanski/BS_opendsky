@@ -205,6 +205,9 @@ void inputNoun()
                 case keyEnter:
                     mode = modeIdle;
                     setLamp(green, lampNoun);
+                    clearRegister(1);
+                    clearRegister(2);
+                    clearRegister(3);
                     break;
                 case keyProceed:
                     break;

@@ -9,10 +9,10 @@ bool toggled500 = false;
 bool toggled250 = false;
 bool toggledverbblink = false;
 
-bool blink = false;
+
+
 bool blinkverb = true;
 bool blinknoun = true;
-bool blinkprog = true;
 bool imutoggle = true;
 bool printregtoggle = true;
 bool uplink_compact_toggle = true;
