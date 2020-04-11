@@ -24,6 +24,12 @@ const short     modeLampTest                = 5;
 
 // possible Programs
 const short     programNone                 = 0;
+const short     programSetTimeMan           = 20;
+const short     programSetDateMan           = 21;
+const short     programSetTimeGPS           = 22;
+const short     programSetDateGPS           = 23;
+const short     programSetDebugEEPROM       = 24;
+const short     programSetColormodeEEPROM   = 25;
 const short     programJFKAudio             = 62;
 const short     programApollo11Audio        = 69;
 const short     programApollo13Audio        = 70;

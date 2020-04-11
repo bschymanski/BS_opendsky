@@ -44,6 +44,7 @@ bool printed = true;
 
 #include <inputVerb.h>
 #include <inputNoun.h>
+#include <inputProgram.h>
 
 // some toggle definitions for blinking stuff
 
@@ -195,7 +196,6 @@ void loop()
     }
     case modeInputProgram:
     {
-      setLamp(blue, lampProg);
       if ((toggle == true) && (toggledverbblink == true))
       {
         toggledverbblink = false;
@@ -206,52 +206,7 @@ void loop()
         toggledverbblink = true;
         printVerb(verb, blink=true);
       }
-      temporaryKey = readKeyboard();
-      if (pressedKey != temporaryKey)
-      {
-        switch(temporaryKey)
-        {
-          case keyVerb:
-            break;
-          case keyNoun:
-            break;
-          case keyRelease:
-            break;
-          case keyNumber0:
-          case keyNumber1:
-          case keyNumber2:
-          case keyNumber3:
-          case keyNumber4:
-          case keyNumber5:
-          case keyNumber6:
-          case keyNumber7:
-          case keyNumber8:
-          case keyNumber9:
-          case keyPlus:
-            break;
-          case keyMinus:
-            break;
-          case keyClear:
-            break;
-          case keyEnter:
-            break;
-          case keyProceed:
-            break;
-          case keyReset:
-            mode = modeIdle;
-            setLamp(green, lampVerb);
-            setLamp(green, lampNoun);
-            setLamp(green, lampProg);
-            noun = 0;
-            verb = 0;
-            prog = 0;
-            verb_valid = false;
-            break;
-          default:
-            break;
-        }
-      }
-      pressedKey = temporaryKey;
+      inputProgram();
       break;
     }
     case modeInputNumber:

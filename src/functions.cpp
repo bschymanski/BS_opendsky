@@ -91,3 +91,13 @@ void clearNounfunction()
   printChar(0, 4, ' ');
   printChar(0, 5, ' ');
 }
+
+void clearProgfunction()
+{
+  prog_valid = false;
+  prog = 0;
+  prog_0 = -1;
+  prog_1 = -1;
+  printChar(0, 2, ' ');
+  printChar(0, 3, ' ');
+}
