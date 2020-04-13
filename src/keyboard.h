@@ -23,6 +23,8 @@ const short     keyRelease              = 16;
 const short     keyEnter                = 15;
 const short     keyReset                = 17;
 
+extern short temporaryKey;
+extern short pressedKey;
 
 extern void keyboardsetup();
 extern int readKeyboard();

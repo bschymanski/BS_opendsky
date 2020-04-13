@@ -18,51 +18,7 @@ auto timer = timer_create_default();
 
 // some toggle definitions for blinking stuff
 
-// initialisation of Mode-, Verb, Noun, Program and Action Modes
-// current Mode-, Verb, Noun, Program and Action Values
-short mode    = modeIdle;     // eq 0
-short verb    = verbNone;     // eq 0
-short noun    = verbNone;     // eq 0
-short prog    = programNone;  // eq 0
-short action  = action_none;  // eq 0
 
-// old Mode-, Verb, Noun, Program and Action Values
-short old1_mode    = modeIdle;     // eq 0
-short old1_verb    = verbNone;     // eq 0
-short old1_noun    = verbNone;     // eq 0
-short old1_prog    = programNone;  // eq 0
-short old1_action  = action_none;  // eq 0
-
-// before old Mode-, Verb, Noun, Program and Action values
-short old2_mode    = modeIdle;     // eq 0
-short old2_verb    = verbNone;     // eq 0
-short old2_noun    = verbNone;     // eq 0
-short old2_prog    = programNone;  // eq 0
-short old2_action  = action_none;  // eq 0
-
-bool verb_valid = false;
-bool noun_valid = false;
-bool prog_valid = false;
-
-short verb_0 = -1;
-short verb_1 = -1;
-
-short noun_0 = -1;
-short noun_1 = -1;
-
-short prog_0 = -1;
-short prog_1 = -1;
-
-short temporaryKey  = keyNone;
-short pressedKey    = keyNone;
-
-short verb_temp = -1;
-short noun_temp = -1;
-short prog_temp = -1;
-
-bool verb_error = false;
-bool noun_error = false;
-bool prog_error = false;
 
 void serialprintmainstates()
 {
@@ -125,10 +81,6 @@ void loop()
     case modeIdle:
     {
       // Idlemode, dsky just waits for a proper key
-      setLamp(white, lampSTBY);
-      printProg(prog);
-      printVerb(verb);
-      printNoun(noun);
       // Read the key and determine which mode to be in
       temporaryKey = readKeyboard();
       //
@@ -137,16 +89,28 @@ void loop()
         switch(temporaryKey)
         {
           case keyVerb:
+            clearVerbfunction();
+            clearNounfunction();
             mode = modeInputVerb;
             break;
           case keyNoun:
             if (verb_valid == true)
             {
+              if (executeAction == true)
+              { // we have a running action. The Verb key hase been pressed, so a new action is going to be
+                // entered, the current action is therefore invalid
+                clearNounfunction();
+                mode = modeInputNoun;
+              }
+              clearNounfunction();
               mode = modeInputNoun;
             }
             break;
           case keyRelease:
             mode = modeIdle;
+            clearVerbfunction();
+            clearNounfunction();
+            setLamp(off, lampKeyRelease);
             break;
           case keyReset:
             keyResetfunction();
@@ -154,6 +118,35 @@ void loop()
         }
       }
       pressedKey = temporaryKey;
+      // is there an action or a Program to perform?
+      if ((executeAction != true) && (executeProgram != true) && (mode == modeIdle))
+      {
+        setLamp(off, lampProgCond);
+        setLamp(white, lampSTBY);
+        printProg(prog);
+        printVerb(verb);
+        printNoun(noun);
+      }
+      if ((executeAction == true) && (executeProgram != true) && (mode == modeIdle))
+      { // the action preceeds the program
+        setLamp(yellow, lampProgCond);
+        setLamp(off, lampSTBY);
+        runAction(action);
+      }
+      else if ((executeAction != true) && (executeProgram == true) && (mode == modeIdle))
+      {
+        setLamp(green, lampProgCond);
+        setLamp(off, lampSTBY);
+        setLamp(off, lampKeyRelease);
+        runProgram(prog);
+      }
+      else if ((executeAction == true) && (executeProgram == true) && (mode == modeIdle))
+      { // the action preceeds the program
+        setLamp(blue, lampProgCond);
+        setLamp(off, lampSTBY);
+        setLamp(white, lampKeyRelease);
+        runAction(action);
+      }
       break;
     }
     case modeInputVerb:
@@ -194,6 +187,7 @@ void loop()
     }
     case modeExcuteAction:
     {
+      /* this was an error, don't want to use it
       setLamp(white, lampUplinkActy);  // just to indicate we are in Action execution Mode
       printProg(prog);
       printVerb(verb);
@@ -304,6 +298,7 @@ void loop()
           }
         }
       }
+      */
       break;
     }
     default:
@@ -311,7 +306,7 @@ void loop()
       // there should be no Mode...
       setLamp(orange, lampProgCond);
       break;
-    }
+    } 
   }
   // blink the OPR Error Lamp if there is an input Error
   if ((verb_error == true) || (noun_error == true) || (prog_error == true))

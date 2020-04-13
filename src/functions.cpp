@@ -4,6 +4,7 @@
 #include <neopixel.h>
 #include <SevenSeg.h>
 #include <globals.h>
+#include <time_functions.h>
 
 // 1sec toogle
 bool toggle_timer(void *)
@@ -57,6 +58,7 @@ void keyResetfunction()
   setLamp(green, lampProg);
   setLamp(off, lampProgCond);
   setLamp(off, lampUplinkActy);
+  setLamp(off, lampKeyRelease);
   noun = 0;
   verb = 0;
   prog = 0;
@@ -84,10 +86,8 @@ void clearVerbfunction()
   verb_1 = -1;
   noun_0 = -1;
   noun_1 = -1;
-  executeProgram = false;
   executeAction = false;
   lookupAction = false;
-  lookupProgram = false;
   verb_error = false;
   noun_error = false;
   printChar(0, 0, ' ');
@@ -99,12 +99,15 @@ void clearVerbfunction()
 void clearNounfunction()
 {
   noun_valid = false;
-  noun = 0;
+  noun = nounNone;
   noun_0 = -1;
   noun_1 = -1;
   executeAction = false;
   printChar(0, 4, ' ');
   printChar(0, 5, ' ');
+  clearRegister(1);
+  clearRegister(2);
+  clearRegister(3);
 }
 
 void clearProgfunction()
@@ -117,3 +120,4 @@ void clearProgfunction()
   printChar(0, 2, ' ');
   printChar(0, 3, ' ');
 }
+

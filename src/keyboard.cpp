@@ -1,6 +1,9 @@
 #include <Arduino.h>
 #include <keyboard.h>
 
+short temporaryKey  = keyNone;
+short pressedKey    = keyNone;
+
 void keyboardsetup()
 {
   // Analog Pins for the keyboard

@@ -26,7 +26,7 @@ const short     modeExcuteProgram           = 7;
 
 // possible Programs
 const short     programNone                 = 0;
-const short     programSetTimeMan           = 20;
+const short     programDispTimeDate         = 20;
 const short     programSetDateMan           = 21;
 const short     programSetTimeGPS           = 22;
 const short     programSetDateGPS           = 23;
@@ -55,62 +55,6 @@ const short     nounRangeTgoVelocity        = 68;
 const short     nounSelectAudioclip         = 98;
 const short     nounNotUsed         		= -1;
 
-extern bool toggle;
 
-
-extern bool global_state_1sec;
-extern bool global_state_500;
-extern bool global_state_250;
-
-
-extern bool toggle500;
-extern bool toggle250;
-
-
-
-
-extern short verb_0;
-extern short verb_1;
-
-extern short noun_0;
-extern short noun_1;
-
-extern short prog_0;
-extern short prog_1;
-
-extern short mode;
-extern short verb;
-extern short noun;
-extern short prog;
-extern short action;
-
-// old Mode-, Verb, Noun, Program and Action Values
-extern short old1_mode;
-extern short old1_verb;
-extern short old1_noun;
-extern short old1_prog;
-extern short old1_action;
-
-// before old Mode-, Verb, Noun, Program and Action values
-extern short old2_mode;
-extern short old2_verb;
-extern short old2_noun;
-extern short old2_prog;
-extern short old2_action;
-
-extern bool verb_valid;
-extern bool noun_valid;
-extern bool prog_valid;
-
-extern short temporaryKey;
-extern short pressedKey;
-
-extern short verb_temp;
-extern short noun_temp;
-extern short prog_temp;
-
-extern bool verb_error;
-extern bool noun_error;
-extern bool prog_error;
 
 #endif

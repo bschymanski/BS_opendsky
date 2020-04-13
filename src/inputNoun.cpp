@@ -27,6 +27,7 @@ void inputNoun()
                 noun = noun_temp;
                 noun_valid = true;
                 found = true;
+                action = ProgramTable[idx].action;
                 printRegister(1,verb);
                 printRegister(2, noun);
                 printRegister(3, idx);
@@ -203,7 +204,8 @@ void inputNoun()
                     clearNounfunction();
                     break;
                 case keyEnter:
-                    mode = modeExcuteAction;
+                    mode = modeIdle;
+                    executeAction = true;
                     setLamp(green, lampNoun);
                     clearRegister(1);
                     clearRegister(2);

@@ -1,5 +1,6 @@
 #include <globals.h>
 #include <main.h>
+#include <time_functions.h>
 
 
 
@@ -21,7 +22,7 @@ ProgramStruct ProgramTable[] =
     { verbDisplayDecimal,   nounClockTime,      action_displayRealTimeClock,  programNotUsed                },  /* V16E  N36 E  - Display Time */
     { verbDisplayDecimal,   nounClockTime,      action_displayRealTimeClock,  programNotUsed                },  /* V16E  N36 E  - Display Time */
     { verbDisplayDecimal,   nounClockTime,      action_displayRealTimeClock,  programNotUsed                },  /* V16E  N36 E  - Display Time */
-    { verbInputProg,        nounNotUsed,        action_none,                  programSetTimeMan             },  /* V37  20E     - Set Time Manually*/ 
+    { verbInputProg,        nounNotUsed,        action_none,                  programDispTimeDate           },  /* V37  20E     - Display Date / Month / Time : progDispTimeDate()*/ 
     { verbInputProg,        nounNotUsed,        action_none,                  programSetDateMan             },  /* V37  21E*/
     { verbInputProg,        nounNotUsed,        action_none,                  programSetTimeGPS             },  /* V37  22E*/
     { verbInputProg,        nounNotUsed,        action_none,                  programSetDateGPS             },  /* V37  23E*/
@@ -33,6 +34,78 @@ ProgramStruct ProgramTable[] =
     { verbDisplayDecimal,   nounIMUgyro,        action_displayIMUGyro,        programNotUsed                }   /* V16E  N18 E - Display IMUGyro */
 };
 
+// this function is in globals because it refers to the Programtable
+short runAction(short action)
+{
+    switch (action)
+    {
+        case action_displayRealTimeClock:
+        {
+        actionReadTime();
+        break;
+        }
+    }
+    return(0);
+}
+
+short runProgram(short prog)
+{
+    switch (prog)
+    {
+        case programDispTimeDate:
+        {
+            progDispTimeDate();
+            break;
+        }
+    }
+    return(0);
+}
+
+// initialisation of Mode-, Verb, Noun, Program and Action Modes
+// current Mode-, Verb, Noun, Program and Action Values
+short mode    = modeIdle;     // eq 0
+short verb    = verbNone;     // eq 0
+short noun    = verbNone;     // eq 0
+short prog    = programNone;  // eq 0
+short action  = action_none;  // eq 0
+
+bool actionrunning = false;
+bool programrunning = false;
+
+// old Mode-, Verb, Noun, Program and Action Values
+short old1_mode    = modeIdle;     // eq 0
+short old1_verb    = verbNone;     // eq 0
+short old1_noun    = verbNone;     // eq 0
+short old1_prog    = programNone;  // eq 0
+short old1_action  = action_none;  // eq 0
+
+// before old Mode-, Verb, Noun, Program and Action values
+short old2_mode    = modeIdle;     // eq 0
+short old2_verb    = verbNone;     // eq 0
+short old2_noun    = verbNone;     // eq 0
+short old2_prog    = programNone;  // eq 0
+short old2_action  = action_none;  // eq 0
+
+bool verb_valid = false;
+bool noun_valid = false;
+bool prog_valid = false;
+
+short verb_0 = -1;
+short verb_1 = -1;
+
+short noun_0 = -1;
+short noun_1 = -1;
+
+short prog_0 = -1;
+short prog_1 = -1;
+
+short verb_temp = -1;
+short noun_temp = -1;
+short prog_temp = -1;
+
+bool verb_error = false;
+bool noun_error = false;
+bool prog_error = false;
 
 short NUM_PROG_TABLE_ENTRIES = (sizeof(ProgramTable)/sizeof(ProgramStruct));
 

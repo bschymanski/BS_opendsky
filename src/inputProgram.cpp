@@ -225,6 +225,7 @@ void inputProgram()
                     break;
                 case keyEnter:
                     mode = modeIdle;
+                    executeProgram = true;
                     setLamp(green, lampProg);
                     setLamp(green, lampVerb);
                     old2_verb = old1_verb;
