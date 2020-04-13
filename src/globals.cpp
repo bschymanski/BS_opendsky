@@ -1,6 +1,7 @@
 #include <globals.h>
 #include <main.h>
 #include <time_functions.h>
+#include <gps_functions.h>
 
 
 
@@ -13,39 +14,55 @@ return display data for the 7 segment display driver. Run State is used internal
 by the Program module to track the state of all of the current programs.*/
 ProgramStruct ProgramTable[] =
 {
-	/*VerbNumber            NounNumber          action                        ProgramNumber                     Description */
-	{ verbLampTest,         nounNotUsed,        action_LampTest,              programNotUsed                },  /* V35E N--     - Bulb test */
-	{ verbDisplayDecimal,   nounIMUAttitude,    action_displayIMUAttitude,    programNotUsed                },  /* V16E  N17 E  - IMUAttitude */
-    { verbDisplayDecimal,   nounClockTime,      action_displayRealTimeClock,  programNotUsed                },  /* V16E  N36 E  - Display Time */
-    { verbDisplayDecimal,   nounClockTime,      action_displayRealTimeClock,  programNotUsed                },  /* V16E  N36 E  - Display Time */
-    { verbDisplayDecimal,   nounClockTime,      action_displayRealTimeClock,  programNotUsed                },  /* V16E  N36 E  - Display Time */
-    { verbDisplayDecimal,   nounClockTime,      action_displayRealTimeClock,  programNotUsed                },  /* V16E  N36 E  - Display Time */
-    { verbDisplayDecimal,   nounClockTime,      action_displayRealTimeClock,  programNotUsed                },  /* V16E  N36 E  - Display Time */
-    { verbDisplayDecimal,   nounClockTime,      action_displayRealTimeClock,  programNotUsed                },  /* V16E  N36 E  - Display Time */
-    { verbInputProg,        nounNotUsed,        action_none,                  programDispTimeDate           },  /* V37  20E     - Display Date / Month / Time : progDispTimeDate()*/ 
-    { verbInputProg,        nounNotUsed,        action_none,                  programSetDateMan             },  /* V37  21E*/
-    { verbInputProg,        nounNotUsed,        action_none,                  programSetTimeGPS             },  /* V37  22E*/
-    { verbInputProg,        nounNotUsed,        action_none,                  programSetDateGPS             },  /* V37  23E*/
-    { verbInputProg,        nounNotUsed,        action_none,                  programSetDebugEEPROM         },  /* V37  24E*/
-    { verbInputProg,        nounNotUsed,        action_none,                  programSetColormodeEEPROM     },  /* V37  24E*/
-    { verbInputProg,        nounNotUsed,        action_none,                  programJFKAudio               },  /* V37  62E*/
-    { verbInputProg,        nounNotUsed,        action_none,                  programApollo11Audio          },  /* V37  69E*/
-    { verbInputProg,        nounNotUsed,        action_none,                  programApollo13Audio          },  /* V37  70E*/
-    { verbDisplayDecimal,   nounIMUgyro,        action_displayIMUGyro,        programNotUsed                }   /* V16E  N18 E - Display IMUGyro */
+	/*VerbNumber              NounNumber            action                        ProgramNumber                     Description */
+	{ verbLampTest,           nounNotUsed,          action_LampTest,              programNotUsed                },  /* V35E N--     - Bulb test */
+	{ verbDisplayDecimal,     nounIMUAttitude,      action_displayIMUAttitude,    programNotUsed                },  /* V16  N17 E  - IMUAttitude */
+    { verbDisplayDecimal,   nounClockTime,        action_displayRealTimeClock,  programNotUsed                },  /* V16  N36 E  - Action: Display Time : actionReadTime()*/
+    { verbDisplayDecimal,   nounLatLongAltitude,  action_displayGPS,            programNotUsed                },  /* V16  N43 E  - Action: Display Lattitude / Longitude / Altidue : actionReadGPS() */
+    { verbDisplayDecimal,   nounGPSTime,          action_displayGPSTime,        programNotUsed                },  /* V16  N38 E  - Action: Display GPS Time : actionReadGPSTime() */
+    { verbDisplayDecimal,   nounClockTime,        action_displayRealTimeClock,  programNotUsed                },  /* V16  N36 E  - Display Time */
+    { verbDisplayDecimal,   nounClockTime,        action_displayRealTimeClock,  programNotUsed                },  /* V16  N36 E  - Display Time */
+    { verbDisplayDecimal,   nounClockTime,        action_displayRealTimeClock,  programNotUsed                },  /* V16  N36 E  - Display Time */
+    { verbInputProg,        nounNotUsed,          action_none,                  programDispTimeDate           },  /* V37  20E    - Program: Display Date / Month / Time : progDispTimeDate()*/ 
+    { verbInputProg,        nounNotUsed,          action_none,                  programSetDateMan             },  /* V37  21E*/
+    { verbInputProg,        nounNotUsed,          action_none,                  programSetTimeGPS             },  /* V37  22E*/
+    { verbInputProg,        nounNotUsed,          action_none,                  programSetDateGPS             },  /* V37  23E*/
+    { verbInputProg,        nounNotUsed,          action_none,                  programSetDebugEEPROM         },  /* V37  24E*/
+    { verbInputProg,        nounNotUsed,          action_none,                  programSetColormodeEEPROM     },  /* V37  24E*/
+    { verbInputProg,        nounNotUsed,          action_none,                  programJFKAudio               },  /* V37  62E*/
+    { verbInputProg,        nounNotUsed,          action_none,                  programApollo11Audio          },  /* V37  69E*/
+    { verbInputProg,        nounNotUsed,          action_none,                  programApollo13Audio          },  /* V37  70E*/
+    { verbInputNumber,      nounClockTime,        action_setGPSTime,            programNotUsed                },  /* V21  36E   - Action: Set GPS Time : actionSetGPSTime() */
+    { verbDisplayDecimal,   nounIMUgyro,          action_displayIMUGyro,        programNotUsed                }   /* V16E  N18 E - Display IMUGyro */
 };
 
 // this function is in globals because it refers to the Programtable
 short runAction(short action)
 {
-    switch (action)
+  switch (action)
+  {
+    case action_displayRealTimeClock:
     {
-        case action_displayRealTimeClock:
-        {
-        actionReadTime();
-        break;
-        }
+      actionReadTime();
+      break;
     }
-    return(0);
+    case action_displayGPS:
+    {
+      actionReadGPS();
+      break;
+    }
+    case action_displayGPSTime:
+    {
+      actionReadGPSTime(false);
+      break;
+    }
+    case action_setGPSTime:
+    {
+      actionSetGPSTime();
+      break;
+    }
+  }
+  return(0);
 }
 
 short runProgram(short prog)
@@ -116,6 +133,13 @@ bool toggled = false;
 bool toggled500 = false;
 bool toggled250 = false;
 bool toggledverbblink = false;
+bool gpsreadtoggle = true;
+bool blinkgpstime = false;
+bool blinkgpstimetoggled = false;
+
+short gps_hour = 0;
+short gps_minute = 0;
+short gps_second = 0;
 
 bool blinkverb = true;
 bool blinknoun = true;

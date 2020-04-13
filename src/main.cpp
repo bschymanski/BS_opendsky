@@ -15,6 +15,7 @@ auto timer = timer_create_default();
 #include <inputNoun.h>
 #include <inputProgram.h>
 #include <time_functions.h>
+#include <gps_functions.h>
 
 // some toggle definitions for blinking stuff
 
@@ -33,6 +34,7 @@ void setup()
   keyboardsetup();
   // Initialize the Neopixels
   NeoPixelSetup();
+  GPS_setup();
   setLamp(green, lampVerb);
   setLamp(green, lampNoun);
   setLamp(green, lampProg);
@@ -43,7 +45,7 @@ void setup()
   Serial.begin(9600);
   // Toggle 
   timer.every(1000, toggle_timer);
-  timer.every(50, toggle_timer_500);
+  timer.every(500, toggle_timer_500);
   timer.every(250, toggle_timer_250);
 }
 
@@ -54,25 +56,25 @@ void loop()
   {
       if ((toggle250 == true) && (toggled250 == false))
       {
-          setLamp(white, lampClk);
+          setLamp(green, lampCompActy);
           toggled250 = true;
       }
       else if ((toggle250 == false) && (toggled250 == true))
       {
-          setLamp(off, lampClk);
+          setLamp(off, lampCompActy);
       }
   }
-  else
+  else if (toggle == false)
   {
       //setLamp(off, lampClk);
       if ((toggle250 == true) && (toggled250 == true))
       {
-          setLamp(white, lampClk);
+          setLamp(green, lampCompActy);
           toggled250 = false;
       }
       else if ((toggle250 == false) && (toggled250 == false))
       {
-          setLamp(off, lampClk);
+          setLamp(off, lampCompActy);
       }
   }
   

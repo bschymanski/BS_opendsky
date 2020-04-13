@@ -13,6 +13,8 @@ const short     action_PlayAudioclip                = 7;
 const short     action_PlaySelectedAudioclip        = 8;
 const short     action_displayIMUGyro               = 9;
 const short     action_LampTest                     = 10;
+const short     action_displayGPSTime               = 11;
+const short     action_setGPSTime                   = 12;
 
 // Loop Modes
 const short     modeIdle                    = 0;
@@ -50,6 +52,7 @@ const short     nounIMUAttitude             = 17;
 const short     nounIMUgyro                 = 18;
 const short     nounClockTime               = 36;
 const short     nounDate                    = 37;
+const short     nounGPSTime                 = 38;
 const short     nounLatLongAltitude         = 43;
 const short     nounRangeTgoVelocity        = 68;
 const short     nounSelectAudioclip         = 98;

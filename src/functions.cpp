@@ -42,7 +42,7 @@ bool toggle_timer_250(void *)
     global_state_250=true;
     toggle250 = true;
   }
-  else
+  else if (global_state_250==true)
   {
     global_state_250=false;
     toggle250 = false;
@@ -59,6 +59,8 @@ void keyResetfunction()
   setLamp(off, lampProgCond);
   setLamp(off, lampUplinkActy);
   setLamp(off, lampKeyRelease);
+  setLamp(off, lampClk);
+  setLamp(off, lampOprErr);
   noun = 0;
   verb = 0;
   prog = 0;
@@ -70,11 +72,10 @@ void keyResetfunction()
   executeAction = false;
   lookupAction = false;
   lookupProgram = false;
-  setLamp(off, lampOprErr);
   clearRegister(1);
   clearRegister(2);
   clearRegister(3);
-  }
+}
 
 void clearVerbfunction()
 {

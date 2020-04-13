@@ -24,9 +24,6 @@ extern bool global_state_250;
 extern bool toggle500;
 extern bool toggle250;
 
-
-
-
 extern short verb_0;
 extern short verb_1;
 
@@ -81,11 +78,16 @@ extern short NUM_PROG_TABLE_ENTRIES;
 extern bool blink;
 extern bool toggledprogblink;
 extern bool blinkprog;
-
+extern bool blinkgpstime;
+extern bool blinkgpstimetoggled;
 extern bool toggled;
 extern bool toggled500;
 extern bool toggled250;
 extern bool toggledverbblink;
+extern bool gpsreadtoggle;
+extern short gps_hour;
+extern short gps_minute;
+extern short gps_second;
 
 extern bool blinkverb;
 extern bool blinknoun;
