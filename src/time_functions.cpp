@@ -8,6 +8,7 @@
 #include <keyboard.h>
 #include <globals.h>
 #include <gps_functions.h>
+#include <Timezone.h>
 
 #include "RTClib.h"
 RTC_DS1307 realTimeClock;
@@ -19,29 +20,45 @@ int oldSecond = 0;
 short timezone = 1;
 short summertime = 1;
 
+//https://github.com/JChristensen/Timezone?utm_source=platformio&utm_medium=piohome
+/*
+Define a TimeChangeRule as follows:
+TimeChangeRule myRule = {abbrev, week, dow, month, hour, offset};
+
+Where:
+abbrev is a character string abbreviation for the time zone; it must be no longer than five characters.
+week is the week of the month that the rule starts.
+dow is the day of the week that the rule starts.
+hour is the hour in local time that the rule starts (0-23).
+offset is the UTC offset in minutes for the time zone being defined.
+For convenience, the following symbolic names can be used:
+week: First, Second, Third, Fourth, Last
+dow: Sun, Mon, Tue, Wed, Thu, Fri, Sat
+month: Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct, Nov, Dec
+*/
+TimeChangeRule myDST = {"EDT", Last, Sun, Mar, 2, +120};    //Daylight time = UTC + 2 hours
+TimeChangeRule mySTD = {"EST", Last, Sun, Oct, 2, +60};     //Standard time = UTC + 1 hours
+
+Timezone myTZ(myDST, mySTD);
+
+
+TimeChangeRule* tcr;               //pointer to the time change rule, use to get TZ abbrev
+time_t now_time_t, utc_time_t, local_time_t;
+
+
 void time_setup()
 {
     // Analog Pins for the keyboard
     realTimeClock.begin();
 }
 
-short calclocaltime(short hour)
-{
-  if ((hour + timezone + summertime - 24) >= 0)
-  {
-    hour = hour +timezone + summertime -24;
-  }
-  else if ((hour + timezone + summertime - 24) < 0) 
-  {
-    hour = hour + timezone + summertime;
-  }
-  return hour;
-}
-
 void actionReadTime()
 {
     // read time from real-time clock (RTC)
     DateTime now = realTimeClock.now();
+    DateTime now_time_t = realTimeClock.now();
+    time_t utc_time_t = now_time_t.unixtime();
+    time_t local_time_t = myTZ.toLocal(utc_time_t, &tcr);
     // 10th and hundreds of seconds
     if( oldSecond < now.second() )
     {
@@ -50,15 +67,9 @@ void actionReadTime()
     }
     int hundreds = ( ( millis()-previousMillis )/10 )%100;
     int tenth = hundreds - (hundreds % 10);
-    //valueForDisplay[register1Position] = (now.hour());
-    //valueForDisplay[register2Position] = (now.minute());
-    //valueForDisplay[register3Position] = ((now.second() * 100) + tenth);
-    //setDigits();
     printVerb(verb);
     printNoun(noun);
-    short utchour = now.hour();
-    short locaclhour = calclocaltime(utchour);
-    printRegister(1,(locaclhour));
+    printRegister(1, hour(local_time_t));
     printRegister(2,(now.minute()));
     printRegister(3,((now.second() * 100) + tenth));
 }
@@ -67,7 +78,12 @@ void progDispTimeDate()
 {
     
     // read time from real-time clock (RTC)
+    // the Timezone Library uses the time_t structure, where the RTC Lib used here uses DateTime structure. They need to be converted....
+    // https://arduino.stackexchange.com/questions/17639/the-difference-between-time-t-and-datetime/17650#17650
     DateTime now = realTimeClock.now();
+    DateTime now_time_t = realTimeClock.now();
+    time_t utc_time_t = now_time_t.unixtime();
+    time_t local_time_t = myTZ.toLocal(utc_time_t, &tcr);
     // 10th and hundreds of seconds
     if( oldSecond < now.second() )
     {
@@ -76,21 +92,11 @@ void progDispTimeDate()
     }
     int hundreds = ( ( millis()-previousMillis )/10 )%100;
     int tenth = hundreds - (hundreds % 10);
-    //valueForDisplay[register1Position] = (now.hour());
-    //valueForDisplay[register2Position] = (now.minute());
-    //valueForDisplay[register3Position] = ((now.second() * 100) + tenth);
-    //setDigits();
-    short utchour = now.hour();
-    short locaclhour = calclocaltime(utchour);
     short day = now.day();
-    if (locaclhour < utchour)
-    {
-      day = day+1;
-    }
     printVerb(day);
     short month = now.month();
     printNoun(month);
-    printRegister(1,(locaclhour));
+    printRegister(1,(hour(local_time_t)));
     printRegister(2,(now.minute()));
     printRegister(3,((now.second() * 100) + tenth));
 }
