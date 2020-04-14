@@ -24,7 +24,7 @@ void readGPS()
 { // locacl function for reading the GPS Device
   if ((toggle == true) && (gpsreadtoggle == true))
   {
-    setLamp(white, lampClk);
+    if (debug == true) setLamp(white, lampClk);
     while(Serial.available())
     {
         setLamp(white, lampAlt);
@@ -39,7 +39,8 @@ void readGPS()
   }
   else if ((toggle == false) && (gpsreadtoggle == false))
   {
-    setLamp(yellow, lampClk);
+    
+    if (debug == true) setLamp(yellow, lampClk);
     digitalWrite(7,HIGH);
     gpsreadtoggle = true;
   }

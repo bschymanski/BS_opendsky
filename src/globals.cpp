@@ -3,7 +3,8 @@
 #include <time_functions.h>
 #include <gps_functions.h>
 
-
+bool debug = false;
+bool colormode = true;
 
 /* This structure contains all of the programs in the system. The noun number is
 optional. The program function is called when the verb and noun are entered. if
