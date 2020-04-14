@@ -7,6 +7,8 @@
 //initialize the Sevensegment function with the LedControll Library
 LedControl SevenSeg = LedControl(12,10,11,4);
 
+
+
 // Setup of the Sevensegment LED
 void SevenSegSetup(void)
 {
@@ -29,6 +31,7 @@ void printRegister(int dregister, long number, bool leadzero, bool blink, bool a
     //num3 = (fm_station / 100) % 10;
     //num2 = (fm_station / 1000) % 10;
     //num1 = (fm_station / 10000) % 10;
+    bool number_positive = true; 
     int one = 0;
     int ten = 0;
     int hundred = 0;
@@ -38,13 +41,13 @@ void printRegister(int dregister, long number, bool leadzero, bool blink, bool a
     if (number < 0)
     {
         number = -number;
-        // Set the minus sign 
-        SevenSeg.setRow(dregister, 0, B00100100);
+        number_positive = false;
     }
     else 
     {
         // Set the plus sign
-        SevenSeg.setRow(dregister, 0, B01110100);
+        //SevenSeg.setRow(dregister, 0, B01110100);
+        number_positive = true;
     }
     // now seperate the number
     if (number == 0)
@@ -96,6 +99,15 @@ void printRegister(int dregister, long number, bool leadzero, bool blink, bool a
         }
         else 
         {
+            if (number_positive == true)
+            {
+              SevenSeg.setRow(dregister, 0, B01110100);
+            }
+            else
+            {
+              SevenSeg.setRow(dregister, 0, B00100100);
+            }
+            
             SevenSeg.setDigit(dregister, 5, one, false);
             SevenSeg.setDigit(dregister, 4, ten, false);
             SevenSeg.setDigit(dregister, 3, hundred, false);

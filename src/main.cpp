@@ -116,7 +116,24 @@ void loop()
             break;
           case keyReset:
             keyResetfunction();
-            break;  
+            break;
+          case keyPlus:
+            IncDecNumber++;  
+            break;
+          case keyMinus:
+            IncDecNumber--;
+            break;
+          case keyEnter:
+            IncDecNumber_done = true;
+            break;
+          case keyProceed:
+          {
+            if (action == action_setTime)
+            {
+              actionSetTime_second_done = true;
+            }
+            break;
+          }
         }
       }
       pressedKey = temporaryKey;
@@ -184,6 +201,10 @@ void loop()
       break;
     }
     case modeLampTest:
+    {
+      break;
+    }
+    case modeIncDecNumber:
     {
       break;
     }

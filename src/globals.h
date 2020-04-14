@@ -109,4 +109,7 @@ extern bool lookupAction;
 extern bool executeProgram;
 extern bool lookupProgram;
 
+extern long IncDecNumber;
+extern bool IncDecNumber_done;
+
 #endif

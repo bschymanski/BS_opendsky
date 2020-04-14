@@ -16,9 +16,29 @@ RTC_DS1307 realTimeClock;
 unsigned long previousMillis = 0;
 int oldSecond = 0;
 
-int nowHour_temp = 0;
-int nowMinute_temp = 0;
-int nowSecond_temp = 0;
+// V21N36 actionSetTime() and Date toggle Variables
+bool actionSetTime_init = false;
+bool actionSetTime_hour = false;
+bool actionSetTime_minute = false;
+bool actionSetTime_second = false;
+bool actionSetTime_year = false;
+bool actionSetTime_month = false;
+bool actionSetTime_day = false;
+bool actionSetTime_hour_done = false;
+bool actionSetTime_minute_done = false;
+bool actionSetTime_second_done = false;
+bool actionSetTime_year_done = false;
+bool actionSetTime_month_done = false;
+bool actionSetTime_day_done = false;
+short nowYear_temp = 0;
+short nowMonth_temp = 0;
+short nowDay_temp = 0;
+short nowHour_temp = 0;
+short nowMinute_temp = 0;
+short nowSecond_temp = 0;
+bool toggle_R1 = false;
+bool toggle_R2 = false;
+bool toggle_R3 = false;
 
 //https://github.com/JChristensen/Timezone?utm_source=platformio&utm_medium=piohome
 /*
@@ -169,67 +189,150 @@ void actionSetGPSTime()
 
 void actionSetTime()
 {   // read & display time from hardware real-time clock (RTC)
-    DateTime now = realTimeClock.now();
-    //int nowYear = now.year();
-    //int nowMonth = now.month();
-    //int nowDay = now.day();
-    int nowHour = now.hour();
-    int nowMinute = now.minute();
-    int nowSecond = now.second();
     
-    temporaryKey = readKeyboard(); // lets save the return of the key
-    if (pressedKey != temporaryKey)
+    /* 
+    global variables to be used:
+    bool actionSetTime_init = false;
+    bool actionSetTime_hour = false;
+    bool actionSetTime_minute = false;
+    bool actionSetTime_second = false;
+    bool actionSetTime_year = false;
+    bool actionSetTime_month = false;
+    bool actionSetTime_day = false;
+    bool actionSetTime_hour_done = false;
+    bool actionSetTime_minute_done = false;
+    bool actionSetTime_second_done = false;
+    bool actionSetTime_year_done = false;
+    bool actionSetTime_month_done = false;
+    bool actionSetTime_day_done = false;
+    short nowHour_temp = 0;
+    short nowMinute_temp = 0;
+    short nowSecond_temp = 0;
+    bool toggle_R1 = false;
+    bool toggle_R2 = false;
+    bool toggle_R3 = false;
+    */
+    // first initialize temporary hour, minute and Second variables
+    if (actionSetTime_init == false)
+    { // read the current realtime clock
+      DateTime now = realTimeClock.now();
+      nowYear_temp = now.year();
+      nowMonth_temp = now.month();
+      nowDay_temp = now.day();
+      nowHour_temp = now.hour();
+      nowMinute_temp = now.minute();
+      nowSecond_temp = now.second();
+      actionSetTime_init = true;
+    }
+    else if (actionSetTime_init == true)
+    { // we want to set the hour, minute and second
+      if ((actionSetTime_hour == false) && (actionSetTime_minute == false) && (actionSetTime_second == false))
+      { // neither hour, minute or second have been set
+        actionSetTime_hour = true;
+        IncDecNumber = nowHour_temp;
+        IncDecNumber_done = false;
+      }
+      //else if ((actionSetTime_hour == false) && (actionSetTime_minute == true) && (actionSetTime_second == false))
+      //{ // neither hour, minute or second have been set
+      //  IncDecNumber = nowMinute_temp;
+      //  IncDecNumber_done = false;
+      //}
+    }
+    
+    
+    if ((actionSetTime_hour == true) && (actionSetTime_minute == false) && (actionSetTime_second == false) && (IncDecNumber_done != true))
     {
-      switch(temporaryKey) // lets check what to do with the pressed key
-      {
-        case keyVerb: // why presse the Verb button again when already in modeInputVerb and we have a valid Verb? hmm maybe we want a new Verb?
-          if (verb_valid == true)
-          {
-            clearVerbfunction();
-          }
-          break;
-        case keyNoun: // if we are in verbinput mode, why press the noun button, makes sense only if we already have a valid verb.
-          if (verb_valid == true)
-          {
-            mode = modeInputNoun;
-          }
-          break;
-        case keyRelease:  // we changed our mind and don't want to input a verb, back to idle mode
-          mode = modeIdle;
-          setLamp(green, lampVerb);
-          break;
-                // Now we are entering the numbers for the verb!
-        case keyNumber0:  
-        case keyNumber1:
-        case keyNumber2:
-        case keyNumber3:
-        case keyNumber4:
-        case keyNumber5:
-        case keyNumber6:
-        case keyNumber7:
-        case keyNumber8:
-        case keyNumber9:
-          break;
+      nowHour_temp = IncDecNumber;
+      setLamp(yellow, lampClk);
+    }
+    else if ((actionSetTime_hour == true) && (actionSetTime_minute == false) && (actionSetTime_second == false) && (IncDecNumber_done == true))
+    {
+      actionSetTime_hour_done = true;
+      actionSetTime_hour = false;
+      actionSetTime_minute = true;
+      actionSetTime_second = false;
+      nowHour_temp = IncDecNumber;
+      IncDecNumber_done = false;
+      IncDecNumber = nowMinute_temp;
+      setLamp(white, lampClk);
+    }
+    else if ((actionSetTime_hour == false) && (actionSetTime_minute == true) && (actionSetTime_second == false) && (IncDecNumber_done != true))
+    {
+      nowMinute_temp = IncDecNumber;
+      setLamp(blue, lampClk);
+    }
+    else if ((actionSetTime_hour == false) && (actionSetTime_minute == true) && (actionSetTime_second == false) && (IncDecNumber_done == true))
+    {
+      actionSetTime_hour_done = true;
+      actionSetTime_hour = false;
+      actionSetTime_minute = false;
+      actionSetTime_second = true;
+      nowMinute_temp = IncDecNumber;
+      IncDecNumber_done = false;
+      IncDecNumber = nowSecond_temp;
+      setLamp(green, lampClk);
+    }
+    else if ((actionSetTime_hour == false) && (actionSetTime_minute == false) && (actionSetTime_second == true) && (IncDecNumber_done != true))
+    {
+      nowSecond_temp = IncDecNumber;
+      setLamp(red, lampClk);
+    }
+    else if ((actionSetTime_hour == false) && (actionSetTime_minute == false) && (actionSetTime_second == true) && (IncDecNumber_done == true))
+    {
+      actionSetTime_hour_done = true;
+      actionSetTime_hour = true;
+      actionSetTime_minute = true;
+      actionSetTime_second = true;
+      nowSecond_temp = IncDecNumber;
+      IncDecNumber_done = false;
+      IncDecNumber = 0;
+      setLamp(green, lampClk);
+    }
 
-        case keyEnter:
-          break;
-        case keyPlus:
-          nowHour_temp = nowHour++;
-          break;
-        case keyMinus:
-          nowHour--;
-          break;
-      }  
+
+    if (toggle500 == true)
+    {
+      printRegister(1,nowHour_temp);
+      printRegister(2,nowMinute_temp);
+      printRegister(3,(nowSecond_temp * 100)); // emulate milliseconds
     }
-    pressedKey = temporaryKey;
-    if (nowHour > 23) {
-                nowHour = 0;
+    else if (toggle500 == false)
+    {
+      printRegister(1,nowHour_temp,1,actionSetTime_hour);
+      printRegister(2,nowMinute_temp,1,actionSetTime_minute);
+      printRegister(3,(nowSecond_temp * 100),1,actionSetTime_second); // emulate milliseconds
     }
-    if (nowHour < 0) {
-                nowHour = 23;
+    if (actionSetTime_second_done == true)
+    {
+      realTimeClock.adjust(DateTime(nowYear_temp, nowMonth_temp, nowDay_temp, nowHour_temp, nowMinute_temp, nowSecond_temp));
+      actionSetTime_init = false;
+      actionSetTime_hour = false;
+      actionSetTime_minute = false;
+      actionSetTime_second = false;
+      actionSetTime_year = false;
+      actionSetTime_month = false;
+      actionSetTime_day = false;
+      actionSetTime_hour_done = false;
+      actionSetTime_minute_done = false;
+      actionSetTime_second_done = false;
+      actionSetTime_year_done = false;
+      actionSetTime_month_done = false;
+      actionSetTime_day_done = false;
+      nowHour_temp = 0;
+      nowMinute_temp = 0;
+      nowSecond_temp = 0;
+      toggle_R1 = false;
+      toggle_R2 = false;
+      toggle_R3 = false;
+      mode = modeIdle;
+      setLamp(off, lampClk);
+      clearVerbfunction();
+      clearNounfunction();
+      verb = 16;
+      noun = 36;
+      verb_valid = true;
+      noun_valid = true;
+      action = action_displayRealTimeClock;
+      executeAction = true;
     }
-    printRegister(1,nowHour);
-    printRegister(2,nowMinute);
-    printRegister(3,(nowSecond * 100)); // emulate milliseconds
-    //realTimeClock.adjust(DateTime(nowYear, nowMonth, nowDay, nowHour, nowMinute, nowSecond));
 }

@@ -25,6 +25,7 @@ const short     modeInputNumber             = 4;
 const short     modeLampTest                = 5;
 const short     modeExcuteAction            = 6;
 const short     modeExcuteProgram           = 7;
+const short     modeIncDecNumber            = 8; // increase or decrease a number
 
 // possible Programs
 const short     programNone                 = 0;

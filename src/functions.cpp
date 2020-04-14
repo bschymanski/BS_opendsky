@@ -125,4 +125,3 @@ void clearProgfunction()
   printChar(0, 2, ' ');
   printChar(0, 3, ' ');
 }
-

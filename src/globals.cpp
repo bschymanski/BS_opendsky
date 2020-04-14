@@ -166,3 +166,6 @@ bool executeAction = false;
 bool lookupAction = false;
 bool executeProgram = false;
 bool lookupProgram = false;
+
+long IncDecNumber = 0;
+bool IncDecNumber_done =false;
