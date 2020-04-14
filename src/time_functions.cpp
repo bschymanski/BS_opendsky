@@ -16,9 +16,9 @@ RTC_DS1307 realTimeClock;
 unsigned long previousMillis = 0;
 int oldSecond = 0;
 
-// Germany is UTC+1
-short timezone = 1;
-short summertime = 1;
+int nowHour_temp = 0;
+int nowMinute_temp = 0;
+int nowSecond_temp = 0;
 
 //https://github.com/JChristensen/Timezone?utm_source=platformio&utm_medium=piohome
 /*
@@ -55,6 +55,8 @@ void time_setup()
 void actionReadTime()
 {
     // read time from real-time clock (RTC)
+    // the Timezone Library uses the time_t structure, where the RTC Lib used here uses DateTime structure. They need to be converted....
+    // https://arduino.stackexchange.com/questions/17639/the-difference-between-time-t-and-datetime/17650#17650
     DateTime now = realTimeClock.now();
     DateTime now_time_t = realTimeClock.now();
     time_t utc_time_t = now_time_t.unixtime();
@@ -102,7 +104,7 @@ void progDispTimeDate()
 }
 
 void actionSetGPSTime()
-{ // Read the Time from the GPS, press PROceed button, to accept the time  /V26 N36
+{ // Read the Time from the GPS, press PROceed button, to accept the time  /V21 N36
       actionReadGPSTime(true); // read GPS Time an let the Register Blink
       temporaryKey = readKeyboard();
       //
@@ -163,4 +165,71 @@ void actionSetGPSTime()
         }
       }
       pressedKey = temporaryKey;
+}
+
+void actionSetTime()
+{   // read & display time from hardware real-time clock (RTC)
+    DateTime now = realTimeClock.now();
+    //int nowYear = now.year();
+    //int nowMonth = now.month();
+    //int nowDay = now.day();
+    int nowHour = now.hour();
+    int nowMinute = now.minute();
+    int nowSecond = now.second();
+    
+    temporaryKey = readKeyboard(); // lets save the return of the key
+    if (pressedKey != temporaryKey)
+    {
+      switch(temporaryKey) // lets check what to do with the pressed key
+      {
+        case keyVerb: // why presse the Verb button again when already in modeInputVerb and we have a valid Verb? hmm maybe we want a new Verb?
+          if (verb_valid == true)
+          {
+            clearVerbfunction();
+          }
+          break;
+        case keyNoun: // if we are in verbinput mode, why press the noun button, makes sense only if we already have a valid verb.
+          if (verb_valid == true)
+          {
+            mode = modeInputNoun;
+          }
+          break;
+        case keyRelease:  // we changed our mind and don't want to input a verb, back to idle mode
+          mode = modeIdle;
+          setLamp(green, lampVerb);
+          break;
+                // Now we are entering the numbers for the verb!
+        case keyNumber0:  
+        case keyNumber1:
+        case keyNumber2:
+        case keyNumber3:
+        case keyNumber4:
+        case keyNumber5:
+        case keyNumber6:
+        case keyNumber7:
+        case keyNumber8:
+        case keyNumber9:
+          break;
+
+        case keyEnter:
+          break;
+        case keyPlus:
+          nowHour_temp = nowHour++;
+          break;
+        case keyMinus:
+          nowHour--;
+          break;
+      }  
+    }
+    pressedKey = temporaryKey;
+    if (nowHour > 23) {
+                nowHour = 0;
+    }
+    if (nowHour < 0) {
+                nowHour = 23;
+    }
+    printRegister(1,nowHour);
+    printRegister(2,nowMinute);
+    printRegister(3,(nowSecond * 100)); // emulate milliseconds
+    //realTimeClock.adjust(DateTime(nowYear, nowMonth, nowDay, nowHour, nowMinute, nowSecond));
 }

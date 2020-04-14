@@ -33,7 +33,8 @@ ProgramStruct ProgramTable[] =
   { verbInputProg,        nounNotUsed,          action_none,                  programJFKAudio               },  /* V37  62E*/
   { verbInputProg,        nounNotUsed,          action_none,                  programApollo11Audio          },  /* V37  69E*/
   { verbInputProg,        nounNotUsed,          action_none,                  programApollo13Audio          },  /* V37  70E*/
-  { verbInputNumber,      nounClockTime,        action_setGPSTime,            programNotUsed                },  /* V21  36E   - Action: Set GPS Time : actionSetGPSTime() */
+  { verbInputNumber,      nounClockTime,        action_setTime,               programNotUsed                },  /* V21  36E   - Action: Set Time : actionSetTime() */
+  { verbInputNumber,      nounGPSTime,          action_setGPSTime,            programNotUsed                },  /* V21  38E   - Action: Set GPS Time : actionSetGPSTime() */
   { verbDisplayDecimal,   nounIMUgyro,          action_displayIMUGyro,        programNotUsed                }   /* V16E  N18 E - Display IMUGyro */
 };
 
@@ -60,6 +61,11 @@ short runAction(short action)
     case action_setGPSTime:
     {
       actionSetGPSTime();
+      break;
+    }
+    case action_setTime:
+    {
+      actionSetTime();
       break;
     }
   }
