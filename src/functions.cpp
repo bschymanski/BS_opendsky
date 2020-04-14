@@ -53,6 +53,7 @@ bool toggle_timer_250(void *)
 void keyResetfunction()
 {  // for now the Reset Button resets the mode to Idlemode, clears all relevant variables for a clean startover
   mode = modeIdle;
+  digitalWrite(7,LOW); //just in case it was up, we don't read the GPS anymore
   setLamp(green, lampVerb);
   setLamp(green, lampNoun);
   setLamp(green, lampProg);
@@ -91,6 +92,7 @@ void clearVerbfunction()
   lookupAction = false;
   verb_error = false;
   noun_error = false;
+  digitalWrite(7,LOW); //just in case it was up, we don't read the GPS anymore
   printChar(0, 0, ' ');
   printChar(0, 1, ' ');
   printChar(0, 4, ' ');
@@ -104,6 +106,7 @@ void clearNounfunction()
   noun_0 = -1;
   noun_1 = -1;
   executeAction = false;
+  digitalWrite(7,LOW); //just in case it was up, we don't read the GPS anymore
   printChar(0, 4, ' ');
   printChar(0, 5, ' ');
   clearRegister(1);
@@ -118,6 +121,7 @@ void clearProgfunction()
   prog_0 = -1;
   prog_1 = -1;
   executeProgram = false;
+  digitalWrite(7,LOW); //just in case it was up, we don't read the GPS anymore
   printChar(0, 2, ' ');
   printChar(0, 3, ' ');
 }

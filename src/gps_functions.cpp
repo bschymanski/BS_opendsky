@@ -20,46 +20,27 @@ void GPS_setup()
     Serial.begin(9600);
 }
 
-
-
 void readGPS()
 { // locacl function for reading the GPS Device
   if ((toggle == true) && (gpsreadtoggle == true))
   {
     setLamp(white, lampClk);
-    digitalWrite(7,HIGH);
-    delay(20);
-    //Serial.begin(9600);
     while(Serial.available())
     {
-      setLamp(white, lampAlt);
-      if (gps.encode(Serial.read()))
-      {
-        //setLamp(orange, lampPosition);
-        setLamp(orange, lampVel);
-      }
+        setLamp(white, lampAlt);
+        if (gps.encode(Serial.read()))
+        {
+          //setLamp(orange, lampPosition);
+          setLamp(orange, lampVel);
+        }
     }
     digitalWrite(7,LOW);
-    delay(20);
     gpsreadtoggle = false;
   }
   else if ((toggle == false) && (gpsreadtoggle == false))
   {
     setLamp(yellow, lampClk);
     digitalWrite(7,HIGH);
-    delay(20);
-    //Serial.begin(9600);
-    while(Serial.available())
-    {
-      setLamp(white, lampAlt);
-      if (gps.encode(Serial.read()))
-      {
-        //setLamp(orange, lampPosition);
-        setLamp(orange, lampVel);
-      }
-    }
-    digitalWrite(7,LOW);
-    delay(20);
     gpsreadtoggle = true;
   }
 }
@@ -179,7 +160,7 @@ void actionReadGPSTime(bool blinkgpstime)
       clearRegister(1);
       clearRegister(2);
       //clearRegister(3);
-      printRegister(3, (gps.time.second()*100) + (gps.location.age()/10));
+      printRegister(3, ((gps.location.age()/1000)));
     }
     else if (gps.location.age() > 100000)
     {
