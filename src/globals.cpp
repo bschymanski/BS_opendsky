@@ -2,6 +2,7 @@
 #include <main.h>
 #include <time_functions.h>
 #include <gps_functions.h>
+#include <audio_functions.h>
 
 bool debug = false;
 bool colormode = true;
@@ -35,6 +36,7 @@ ProgramStruct ProgramTable[] =
   { verbInputProg,        nounNotUsed,          action_none,                  programApollo13Audio          },  /* V37  70E*/
   { verbInputNumber,      nounClockTime,        action_setTime,               programNotUsed                },  /* V21  36E   - Action: Set Time : actionSetTime() */
   { verbInputNumber,      nounGPSTime,          action_setGPSTime,            programNotUsed                },  /* V21  38E   - Action: Set GPS Time : actionSetGPSTime() */
+  { verbInputNumber,      nounSelectAudioclip,  action_SelectAudioclip,       programNotUsed                },  /* V21  98E   - Action: Select AudioClip : aactionSelectAudioclip() */
   { verbDisplayDecimal,   nounIMUgyro,          action_displayIMUGyro,        programNotUsed                }   /* V16E  N18 E - Display IMUGyro */
 };
 
@@ -66,6 +68,11 @@ short runAction(short action)
     case action_setTime:
     {
       actionSetTime();
+      break;
+    }
+    case action_SelectAudioclip:
+    {
+      actionSelectAudioclip(temporaryKey);
       break;
     }
   }

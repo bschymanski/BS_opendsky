@@ -129,11 +129,17 @@ void actionReadGPSTime(bool blinkgpstime)
       gps_hour = gps.time.hour();
       gps_minute = gps.time.minute();
       gps_second = gps.time.second();
+      gps_second = (gps_second*100) + (gps.location.age()/10);
+      if ((gps_second >= 6000) && (gps_second < 120000))
+      {
+        gps_second = gps_second-6000;
+        gps_minute = gps_minute+1;
+      }
       if (blinkgpstime == false)
       {
         printRegister(1,gps_hour);
         printRegister(2,gps_minute);
-        printRegister(3,(gps_second*100) + (gps.location.age()/10));
+        printRegister(3,gps_second);
       }
       else if (blinkgpstime == true)
       {
@@ -141,7 +147,7 @@ void actionReadGPSTime(bool blinkgpstime)
         {
           printRegister(1,gps_hour);
           printRegister(2,gps_minute);
-          printRegister(3,(gps_second*100) + (gps.location.age()/10));
+          printRegister(3,gps_second);
           blinkgpstimetoggled = false;
         }
         else if (toggle == false && blinkgpstimetoggled == false)
@@ -157,7 +163,7 @@ void actionReadGPSTime(bool blinkgpstime)
     else if (gps.location.age() > 20000)
     {
       setLamp(yellow, lampPosition);
-      gps_second = gps_second + (gps.location.age()/1000);
+      //gps_second = gps_second + (gps.location.age()/1000);
       clearRegister(1);
       clearRegister(2);
       //clearRegister(3);

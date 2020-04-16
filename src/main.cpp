@@ -16,6 +16,7 @@ auto timer = timer_create_default();
 #include <inputProgram.h>
 #include <time_functions.h>
 #include <gps_functions.h>
+#include <audio_functions.h>
 
 // some toggle definitions for blinking stuff
 
@@ -42,6 +43,7 @@ void setup()
   // initialize the Sevensegments
   SevenSegSetup();
   time_setup();
+  audio_setup();
   Serial.begin(9600);
   // Toggle 
   timer.every(1000, toggle_timer);
@@ -84,6 +86,7 @@ void loop()
     {
       // Idlemode, dsky just waits for a proper key
       // Read the key and determine which mode to be in
+      pressedKey = 20;
       temporaryKey = readKeyboard();
       //
       if (pressedKey != temporaryKey)

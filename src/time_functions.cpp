@@ -97,34 +97,32 @@ void actionReadTime()
 }
 
 void progDispTimeDate()
-{
-    
-    // read time from real-time clock (RTC)
-    // the Timezone Library uses the time_t structure, where the RTC Lib used here uses DateTime structure. They need to be converted....
-    // https://arduino.stackexchange.com/questions/17639/the-difference-between-time-t-and-datetime/17650#17650
-    DateTime now = realTimeClock.now();
-    DateTime now_time_t = realTimeClock.now();
-    time_t utc_time_t = now_time_t.unixtime();
-    time_t local_time_t = myTZ.toLocal(utc_time_t, &tcr);
-    // 10th and hundreds of seconds
-    if( oldSecond < now.second() )
-    {
-        oldSecond = now.second();
-        previousMillis = millis();
-    }
-    int hundreds = ( ( millis()-previousMillis )/10 )%100;
-    int tenth = hundreds - (hundreds % 10);
-    short day = now.day();
-    printVerb(day);
-    short month = now.month();
-    printNoun(month);
-    printRegister(1,(hour(local_time_t)));
-    printRegister(2,(now.minute()));
-    printRegister(3,((now.second() * 100) + tenth));
+{  // read time from real-time clock (RTC)
+  // the Timezone Library uses the time_t structure, where the RTC Lib used here uses DateTime structure. They need to be converted....
+  // https://arduino.stackexchange.com/questions/17639/the-difference-between-time-t-and-datetime/17650#17650
+  DateTime now = realTimeClock.now();
+  DateTime now_time_t = realTimeClock.now();
+  time_t utc_time_t = now_time_t.unixtime();
+  time_t local_time_t = myTZ.toLocal(utc_time_t, &tcr);
+  // 10th and hundreds of seconds
+  if( oldSecond < now.second() )
+  {
+      oldSecond = now.second();
+      previousMillis = millis();
+  }
+  int hundreds = ( ( millis()-previousMillis )/10 )%100;
+  int tenth = hundreds - (hundreds % 10);
+  short day = now.day();
+  printVerb(day);
+  short month = now.month();
+  printNoun(month);
+  printRegister(1,(hour(local_time_t)));
+  printRegister(2,(now.minute()));
+  printRegister(3,((now.second() * 100) + tenth));
 }
 
 void actionSetGPSTime()
-{ // Read the Time from the GPS, press PROceed button, to accept the time  /V21 N36
+{ // Read the Time from the GPS, press PROceed button, to accept the time  /V21 N38
       actionReadGPSTime(true); // read GPS Time an let the Register Blink
       temporaryKey = readKeyboard();
       //
@@ -188,7 +186,7 @@ void actionSetGPSTime()
 }
 
 void actionSetTime()
-{   // read & display time from hardware real-time clock (RTC)
+{   // read & display time from hardware real-time clock (RTC) /V21 N36
     
     /* 
     global variables to be used:
