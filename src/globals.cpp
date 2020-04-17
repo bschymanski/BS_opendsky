@@ -3,10 +3,13 @@
 #include <time_functions.h>
 #include <gps_functions.h>
 #include <audio_functions.h>
+#include <mpu_functions.h>
 
 bool debug = false;
 bool colormode = true;
 
+short modeIdletemporaryKey = 20;
+short modeIdlepressedKey = 20;
 /* This structure contains all of the programs in the system. The noun number is
 optional. The program function is called when the verb and noun are entered. if
 the program should be called repeatedly, then you will need to setup a thread
@@ -18,13 +21,11 @@ ProgramStruct ProgramTable[] =
 {
 	/*VerbNumber            NounNumber            action                        ProgramNumber                     Description */
 	{ verbLampTest,         nounNotUsed,          action_LampTest,              programNotUsed                },  /* V35E N--     - Bulb test */
-	{ verbDisplayDecimal,   nounIMUAttitude,      action_displayIMUAttitude,    programNotUsed                },  /* V16  N17 E  - IMUAttitude */
+	{ verbDisplayDecimal,   nounIMUAttitude,      action_displayIMUAttitude,    programNotUsed                },  /* V16  N17 E  - Action: IMUAttitude */
   { verbDisplayDecimal,   nounClockTime,        action_displayRealTimeClock,  programNotUsed                },  /* V16  N36 E  - Action: Display Time : actionReadTime()*/
   { verbDisplayDecimal,   nounLatLongAltitude,  action_displayGPS,            programNotUsed                },  /* V16  N43 E  - Action: Display Lattitude / Longitude / Altidue : actionReadGPS() */
   { verbDisplayDecimal,   nounGPSTime,          action_displayGPSTime,        programNotUsed                },  /* V16  N38 E  - Action: Display GPS Time : actionReadGPSTime() */
-  { verbDisplayDecimal,   nounClockTime,        action_displayRealTimeClock,  programNotUsed                },  /* V16  N36 E  - Display Time */
-  { verbDisplayDecimal,   nounClockTime,        action_displayRealTimeClock,  programNotUsed                },  /* V16  N36 E  - Display Time */
-  { verbDisplayDecimal,   nounClockTime,        action_displayRealTimeClock,  programNotUsed                },  /* V16  N36 E  - Display Time */
+  { verbDisplayDecimal,   nounIMUgyro,          action_displayIMUGyro,        programNotUsed                },  /* V16  N18 E  - Action: IMUGyro */
   { verbInputProg,        nounNotUsed,          action_none,                  programDispTimeDate           },  /* V37  20E    - Program: Display Date / Month / Time : progDispTimeDate()*/ 
   { verbInputProg,        nounNotUsed,          action_none,                  programSetDateMan             },  /* V37  21E*/
   { verbInputProg,        nounNotUsed,          action_none,                  programSetTimeGPS             },  /* V37  22E*/
@@ -72,7 +73,17 @@ short runAction(short action)
     }
     case action_SelectAudioclip:
     {
-      actionSelectAudioclip(temporaryKey);
+      actionSelectAudioclip(modeIdlepressedKey);
+      break;
+    }
+    case action_displayIMUAttitude:
+    {
+      actionReadIMU(Accel);
+      break;
+    }
+    case action_displayIMUGyro:
+    {
+      actionReadIMU(Gyro);
       break;
     }
   }

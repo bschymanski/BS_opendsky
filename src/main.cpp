@@ -17,6 +17,7 @@ auto timer = timer_create_default();
 #include <time_functions.h>
 #include <gps_functions.h>
 #include <audio_functions.h>
+#include <mpu_functions.h>
 
 // some toggle definitions for blinking stuff
 
@@ -36,6 +37,7 @@ void setup()
   // Initialize the Neopixels
   NeoPixelSetup();
   GPS_setup();
+  mpu_setup();
   setLamp(green, lampVerb);
   setLamp(green, lampNoun);
   setLamp(green, lampProg);
@@ -86,12 +88,12 @@ void loop()
     {
       // Idlemode, dsky just waits for a proper key
       // Read the key and determine which mode to be in
-      pressedKey = 20;
-      temporaryKey = readKeyboard();
+      modeIdlepressedKey = 20;
+      modeIdletemporaryKey = readKeyboard();
       //
-      if (pressedKey != temporaryKey)
+      if (modeIdlepressedKey != modeIdletemporaryKey)
       {
-        switch(temporaryKey)
+        switch(modeIdletemporaryKey)
         {
           case keyVerb:
             clearVerbfunction();
@@ -139,7 +141,8 @@ void loop()
           }
         }
       }
-      pressedKey = temporaryKey;
+      modeIdlepressedKey = modeIdletemporaryKey;
+      //printProg(modeIdlepressedKey);
       // is there an action or a Program to perform?
       if ((executeAction != true) && (executeProgram != true) && (mode == modeIdle))
       {

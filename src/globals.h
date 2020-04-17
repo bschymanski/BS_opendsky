@@ -64,6 +64,8 @@ extern bool prog_valid;
 
 extern short temporaryKey;
 extern short pressedKey;
+extern short modeIdletemporaryKey;
+extern short modeIdlepressedKey;
 
 extern short verb_temp;
 extern short noun_temp;

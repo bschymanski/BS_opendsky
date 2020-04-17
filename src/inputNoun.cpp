@@ -207,6 +207,8 @@ void inputNoun()
                     mode = modeIdle;
                     executeAction = true;
                     setLamp(green, lampNoun);
+                    pressedKey = 20;
+                    temporaryKey = 20;
                     clearRegister(1);
                     clearRegister(2);
                     clearRegister(3);

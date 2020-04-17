@@ -68,6 +68,7 @@ void actionSelectAudioclip(short transmittedkey)
 {   // V21 N98 read & enter & play the selected Audio Clip
     // first print initial clipnum = 1
     audiotempkey = transmittedkey;
+    transmittedkey = 20;
     if (audiotempkey != audiopressedkey)
     {
       switch (audiotempkey)

@@ -5,6 +5,7 @@
 #include <SevenSeg.h>
 #include <globals.h>
 #include <time_functions.h>
+#include <audio_functions.h>
 
 // 1sec toogle
 bool toggle_timer(void *)
@@ -73,6 +74,7 @@ void keyResetfunction()
   executeAction = false;
   lookupAction = false;
   lookupProgram = false;
+  clipnum = 1;
   clearRegister(1);
   clearRegister(2);
   clearRegister(3);
@@ -92,6 +94,7 @@ void clearVerbfunction()
   lookupAction = false;
   verb_error = false;
   noun_error = false;
+  clipnum = 1;
   digitalWrite(7,LOW); //just in case it was up, we don't read the GPS anymore
   printChar(0, 0, ' ');
   printChar(0, 1, ' ');
@@ -106,6 +109,7 @@ void clearNounfunction()
   noun_0 = -1;
   noun_1 = -1;
   executeAction = false;
+  clipnum = 1;
   digitalWrite(7,LOW); //just in case it was up, we don't read the GPS anymore
   printChar(0, 4, ' ');
   printChar(0, 5, ' ');
