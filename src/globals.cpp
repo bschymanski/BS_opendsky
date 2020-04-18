@@ -26,6 +26,7 @@ ProgramStruct ProgramTable[] =
   { verbDisplayDecimal,   nounLatLongAltitude,  action_displayGPS,            programNotUsed                },  /* V16  N43 E  - Action: Display Lattitude / Longitude / Altidue : actionReadGPS() */
   { verbDisplayDecimal,   nounGPSTime,          action_displayGPSTime,        programNotUsed                },  /* V16  N38 E  - Action: Display GPS Time : actionReadGPSTime() */
   { verbDisplayDecimal,   nounIMUgyro,          action_displayIMUGyro,        programNotUsed                },  /* V16  N18 E  - Action: IMUGyro */
+  { verbDisplayDecimal,   nounSelectAudioclip,  action_PlayAudioclip,         programNotUsed                },  /* V16  98E   -  Action: Play Selected AudioClip : actionPlaySelectedAudioclip(int clipnum)*/
   { verbInputProg,        nounNotUsed,          action_none,                  programDispTimeDate           },  /* V37  20E    - Program: Display Date / Month / Time : progDispTimeDate()*/ 
   { verbInputProg,        nounNotUsed,          action_none,                  programSetDateMan             },  /* V37  21E*/
   { verbInputProg,        nounNotUsed,          action_none,                  programSetTimeGPS             },  /* V37  22E*/
@@ -37,7 +38,7 @@ ProgramStruct ProgramTable[] =
   { verbInputProg,        nounNotUsed,          action_none,                  programApollo13Audio          },  /* V37  70E*/
   { verbInputNumber,      nounClockTime,        action_setTime,               programNotUsed                },  /* V21  36E   - Action: Set Time : actionSetTime() */
   { verbInputNumber,      nounGPSTime,          action_setGPSTime,            programNotUsed                },  /* V21  38E   - Action: Set GPS Time : actionSetGPSTime() */
-  { verbInputNumber,      nounSelectAudioclip,  action_SelectAudioclip,       programNotUsed                },  /* V21  98E   - Action: Select AudioClip : aactionSelectAudioclip() */
+  { verbInputNumber,      nounSelectAudioclip,  action_SelectAudioclip,       programNotUsed                },  /* V21  98E   - Action: Select AudioClip : aactionSelectAudioclip() actionPlaySelectedAudioclip(int clipnum)*/
   { verbDisplayDecimal,   nounIMUgyro,          action_displayIMUGyro,        programNotUsed                }   /* V16E  N18 E - Display IMUGyro */
 };
 
@@ -73,7 +74,12 @@ short runAction(short action)
     }
     case action_SelectAudioclip:
     {
-      actionSelectAudioclip(modeIdlepressedKey);
+      actionSelectAudioclip();
+      break;
+    }
+    case action_PlayAudioclip:
+    {
+      actionPlaySelectedAudioclip(clipnum);
       break;
     }
     case action_displayIMUAttitude:

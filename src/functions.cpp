@@ -94,7 +94,7 @@ void clearVerbfunction()
   lookupAction = false;
   verb_error = false;
   noun_error = false;
-  clipnum = 1;
+  //clipnum = 1;
   digitalWrite(7,LOW); //just in case it was up, we don't read the GPS anymore
   printChar(0, 0, ' ');
   printChar(0, 1, ' ');
@@ -109,7 +109,7 @@ void clearNounfunction()
   noun_0 = -1;
   noun_1 = -1;
   executeAction = false;
-  clipnum = 1;
+  //clipnum = 1;
   digitalWrite(7,LOW); //just in case it was up, we don't read the GPS anymore
   printChar(0, 4, ' ');
   printChar(0, 5, ' ');

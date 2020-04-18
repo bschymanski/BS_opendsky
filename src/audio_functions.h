@@ -5,5 +5,6 @@ extern int clipcount;
 extern int clipnum;
 
 extern void audio_setup();
-extern void actionSelectAudioclip(short transmittedkey);
+extern void actionSelectAudioclip();
+extern void actionPlaySelectedAudioclip(int clipnum);
 #endif

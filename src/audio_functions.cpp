@@ -15,8 +15,8 @@ DFRobotDFPlayerMini myDFPlayer;
 int clipcount = 0;
 int clipnum = 1;
 
-short audiotempkey = 0;
-short audiopressedkey = 0;
+short audiotempkey = 20;
+short audiopressedkey = 20;
 
 void audio_setup()
 { // DFPlayerMini initialize
@@ -57,21 +57,46 @@ void actionPlaySelectedAudioclip(int clipnum)
     //printVerb(verb);
     //printNoun(noun);
     //playTrack(clipnum);
-    setLamp(orange, lampTemp);
-    myDFPlayer.play(clipnum);
-    setLamp(off, lampTemp);
+    printVerb(verb);
+    printNoun(noun);
+    audiotempkey = 20;
+    audiotempkey = readKeyboard();
+    if (audiotempkey != audiopressedkey)
+    {
+      switch (audiopressedkey)
+      {
+        case keyEnter:
+        {
+          setLamp(orange, lampTemp);
+          myDFPlayer.play(clipnum);
+          setLamp(off, lampTemp);
+          break; 
+        }
+        case keyProceed:
+        {
+          setLamp(orange, lampTemp);
+          myDFPlayer.play(clipnum);
+          setLamp(off, lampTemp);
+          break; 
+        }
+      }
+    }
+    audiopressedkey = audiotempkey;
+    printRegister(1,clipnum);
     //clearVerbfunction();
     //clearNounfunction();
 }
 // V21 N98 read & enter & play the selected Audio Clip
-void actionSelectAudioclip(short transmittedkey)
+void actionSelectAudioclip()
 {   // V21 N98 read & enter & play the selected Audio Clip
     // first print initial clipnum = 1
-    audiotempkey = transmittedkey;
-    transmittedkey = 20;
+    printVerb(verb);
+    printNoun(noun);
+    audiotempkey = 20;
+    audiotempkey = readKeyboard();
     if (audiotempkey != audiopressedkey)
     {
-      switch (audiotempkey)
+      switch (audiopressedkey)
       {
         case keyPlus:
         {
@@ -93,12 +118,18 @@ void actionSelectAudioclip(short transmittedkey)
         }
         case keyEnter:
         {
-          actionPlaySelectedAudioclip(clipnum);
+          //setLamp(orange, lampTemp);
+          //actionPlaySelectedAudioclip(clipnum);
+          
+          //action = action_PlayAudioclip;
           break; 
         }
         case keyProceed:
         {
-          actionPlaySelectedAudioclip(clipnum);
+          verb = 16;
+          noun = 98;
+          action = action_PlayAudioclip;
+          //actionPlaySelectedAudioclip(clipnum);
           break; 
         }
       }
@@ -107,8 +138,6 @@ void actionSelectAudioclip(short transmittedkey)
     if (toggle500 == true)
     {
       printRegister(1,clipnum);
-      printRegister(2,audiopressedkey);
-      printRegister(3,audiotempkey);
     }
     else if (toggle500 == false)
     {
